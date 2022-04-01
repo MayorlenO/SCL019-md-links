@@ -23,16 +23,16 @@ process.stdout.write(colors.green(`Verificando ruta: ${route} \n`));
 if(exist(route) && verifIsFile(route)){
   process.stdout.write(colors.bgWhite(colors.black('El archivo existe!\n')));
   process.stdout.write(colors.green('Transformando la ruta a absoluta:\n'))
-  process.stdout.write(colors.yellow(ruta + '\n'))
-}else{
-  process.stdout.write(colors.red('El archivo o directorio no existe. Vuelva a iniciar la librería'))
+  process.stdout.write(colors.bgMagenta(colors.black(ruta + '\n')))
+}else if(!exist(route)){
+  process.stdout.write(colors.red('El archivo o directorio no existe. Verifique y uelva a iniciar la librería'))
   exit();
 };
 
  if(exist(route) && verifIsDirectory(route)){
   process.stdout.write(colors.bgWhite(colors.black('El directorio existe \n')));
   process.stdout.write(colors.green('Transformando la ruta a absoluta: \n'))
-  process.stdout.write(colors.yellow(ruta +'\n'))
+  process.stdout.write(colors.bgMagenta(colors.black(ruta +'\n')))
   process.stdout.write(colors.green('¿Desea revisar archivos .md dentro del directorio? (Y/N): \n'))
  };
 

@@ -1,13 +1,13 @@
 const fs = require('fs');
 const path = require('path');
 
-const verifyExistence = (resp)  => fs.existsSync(resp); 
+const verifyExistence = (route)  => fs.existsSync(route); 
 
-const verifyExtension = (resp) => path.extname(resp) === '.md';
+const verifyExtension = (route) => path.extname(route) === '.md';
 
-const isFile = (resp) => fs.statSync(resp).isFile()
+const isFile = (route) => fs.statSync(route).isFile()
 
-const isDirectory = (resp) => fs.lstatSync(resp).isDirectory()
+const isDirectory = (route) => fs.lstatSync(route).isDirectory()
 
 
 exports.verifyExtension = verifyExtension;
