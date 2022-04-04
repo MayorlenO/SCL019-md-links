@@ -10,6 +10,7 @@ const isFile = (route) => fs.statSync(route).isFile()
 const isDirectory = (route) => fs.lstatSync(route).isDirectory()
 
 
+
 exports.verifyExtension = verifyExtension;
 exports.verifyExistence = verifyExistence;
 exports.isFile = isFile;

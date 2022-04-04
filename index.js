@@ -13,6 +13,7 @@ const verifIsFile = app.isFile;
 const verifIsDirectory = app.isDirectory;
 
 
+
 process.stdout.write(colors.green('Ingrese la ruta del archivo / directorio que desea revisar:\n'));
 
 process.stdin.on('data', function(data){
@@ -25,7 +26,7 @@ if(exist(route) && verifIsFile(route)){
   process.stdout.write(colors.green('Transformando la ruta a absoluta:\n'))
   process.stdout.write(colors.bgMagenta(colors.black(ruta + '\n')))
 }else if(!exist(route)){
-  process.stdout.write(colors.red('El archivo o directorio no existe. Verifique y uelva a iniciar la librería'))
+  process.stdout.write(colors.red('El archivo o directorio no existe. Verifique y Vuelva a iniciar la librería'))
   exit();
 };
 
@@ -33,7 +34,13 @@ if(exist(route) && verifIsFile(route)){
   process.stdout.write(colors.bgWhite(colors.black('El directorio existe \n')));
   process.stdout.write(colors.green('Transformando la ruta a absoluta: \n'))
   process.stdout.write(colors.bgMagenta(colors.black(ruta +'\n')))
-  process.stdout.write(colors.green('¿Desea revisar archivos .md dentro del directorio? (Y/N): \n'))
+  process.stdout.write(colors.green('Los archivos del directorio son: \n'))
+
+    let dirData = new Array();
+    dirData = fs.readdirSync(route);
+     console.log(dirData);
+  
+
  };
 
 if(verifIsFile(route) && verify(route)){
@@ -42,7 +49,6 @@ if(verifIsFile(route) && verify(route)){
     process.stdout.write(colors.red('El archivo no es MD!'));
      exit();
   }
-
 
  });
 
