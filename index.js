@@ -6,7 +6,6 @@ const app = require('./app.js');
 
 
 let route = '';
-const ruta = path.resolve(route)
 const exist = app.verifyExistence;
 const verify = app.verifyExtension;
 const verifIsFile = app.isFile;
@@ -20,7 +19,7 @@ process.stdin.on('data', function(data){
 route = data.toString().trim();
 process.stdout.write(colors.green(`Verificando ruta: ${route} \n`)); 
 
-
+const ruta = path.resolve(route)
 if(exist(route) && verifIsFile(route)){
   process.stdout.write(colors.bgWhite(colors.black('El archivo existe!\n')));
   process.stdout.write(colors.green('Transformando la ruta a absoluta:\n'))
@@ -36,11 +35,22 @@ if(exist(route) && verifIsFile(route)){
   process.stdout.write(colors.bgMagenta(colors.black(ruta +'\n')))
   process.stdout.write(colors.green('Los archivos del directorio son: \n'))
 
+    
     let dirData = new Array();
-    dirData = fs.readdirSync(route);
-     console.log(dirData);
+    dirData = fs.readdirSync(ruta);
+     console.log(dirData +'\n');
   
+     for (let i = 0; i < dirData.length; i++) {
 
+      let md = new Array();
+      md = dirData[i]
+      if (md.endsWith(".md")) {
+        process.stdout.write('Se han encontrado estos archivos .md \n');
+        process.stdout.write(colors.bgRed(colors.white(md + '\n\n')));
+        process.stdout.write('Ingrese la ruta del archivo que desea revisar \n')
+        
+      }
+    }
  };
 
 if(verifIsFile(route) && verify(route)){
