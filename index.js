@@ -40,31 +40,36 @@ if(exist(route) && verifIsFile(route)){
     dirData = fs.readdirSync(ruta);
      console.log(dirData);
      process.stdout.write('\n');
-  
+     process.stdout.write(colors.green('Y se han encontrado estos archivos .md \n'));
+    
+     
      for (let i = 0; i < dirData.length; i++) {
-
-         md = dirData[i]
+      filesMd = new Array;   
+      md = dirData[i]
       if (md.endsWith(".md")) {
-        process.stdout.write(colors.green('Y se han encontrado estos archivos .md \n'));
-        process.stdout.write(colors.bgRed(colors.white(md)));
+        filesMd.push(md)
+          
         process.stdout.write('\n');
-        process.stdout.write('Ingrese la ruta del archivo que desea revisar \n')
-        
+        process.stdout.write(colors.bgRed(colors.white(filesMd)));
       }
+     
     }
+   
+    process.stdout.write('\n');   
+    process.stdout.write('Ingrese la ruta del archivo que desea revisar \n')
  };
-
- function extension(){
+ 
 if(verifIsFile(route) && verify(route)){
    process.stdout.write(colors.green('La extensión del archivo es .md, ¿Desea revisar sus links? (Y/N)'));
   } else if (verifIsFile(route) && !verify(route)){
     process.stdout.write(colors.red('El archivo no es MD!'));
      exit();
+  
   }
- }
+ });
 
   
- });
+ 
 
 
 
