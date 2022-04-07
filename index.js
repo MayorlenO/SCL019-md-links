@@ -43,19 +43,20 @@ if(exist(route) && verifIsFile(route)){
      process.stdout.write(colors.green('Y se han encontrado estos archivos .md \n'));
     
      
+     const filesMd = [];
+      
      for (let i = 0; i < dirData.length; i++) {
-      filesMd = new Array;   
-      md = dirData[i]
-      if (md.endsWith(".md")) {
-        filesMd.push(md)
-          
-        process.stdout.write('\n');
-        process.stdout.write(colors.bgRed(colors.white(filesMd)));
+      
+      if (dirData[i].endsWith(".md")) {
+        
+        filesMd.push(dirData[i])
+        
       }
+     }
      
-    }
-   
-    process.stdout.write('\n');   
+       
+    console.log(colors.bgRed(colors.white(filesMd)));
+    process.stdout.write('\n');
     process.stdout.write('Ingrese la ruta del archivo que desea revisar \n')
  };
  
@@ -69,30 +70,6 @@ if(verifIsFile(route) && verify(route)){
  });
 
   
- 
-
-
-
-
-
-
-
-
-
-
-
-  
-  
-
-
-
-
-  
-
-
-
-
-
 // module.exports = () => {
 //   // ...
 // };
