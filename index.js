@@ -4,7 +4,9 @@ const { exit } = require('process');
 const colors = require('colors/safe');
 const api = require('./api.js');
 const util = require('util')
+const markdownLinkExtractor = require('markdown-link-extractor');
 
+// let mdLinks = (ruta, options = {validate:false}) =>{
 
 let route = '';
 const exist = api.verifyExistence;
@@ -75,12 +77,19 @@ if(verifIsFile(route) && verify(route)){
    Error No -> ${err.errno}`);
 });
 
+            
+      
      } else if (verifIsFile(route) && !verify(route)){
     process.stdout.write(colors.red('El archivo no es MD!'));
      exit();
-  
-  }
- });
+     }
+
+     });
+    
+    
+ 
+
+//  module.export = mdLinks;
 
   
 // module.exports = () => {
