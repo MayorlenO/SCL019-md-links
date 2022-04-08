@@ -2,14 +2,14 @@ const fs = require('fs');
 const path = require('path');
 const { exit } = require('process');
 const colors = require('colors/safe');
-const app = require('./api.js');
+const api = require('./api.js');
 
 
 let route = '';
-const exist = app.verifyExistence;
-const verify = app.verifyExtension;
-const verifIsFile = app.isFile;
-const verifIsDirectory = app.isDirectory;
+const exist = api.verifyExistence;
+const verify = api.verifyExtension;
+const verifIsFile = api.isFile;
+const verifIsDirectory = api.isDirectory;
 
 
 
