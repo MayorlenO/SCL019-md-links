@@ -40,8 +40,7 @@ if(exist(route) && verifIsFile(route)){
     let dirData = new Array();
     dirData = fs.readdirSync(ruta);
      console.log(dirData);
-     process.stdout.write('\n');
-     process.stdout.write(colors.green('Y se han encontrado estos archivos .md \n'));
+     process.stdout.write(colors.green(' \n Y se han encontrado estos archivos .md \n'));
     
      
      const filesMd = [];      
