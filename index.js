@@ -2,7 +2,7 @@ const fs = require('fs');
 const path = require('path');
 const { exit } = require('process');
 const colors = require('colors/safe');
-const app = require('./app.js');
+const app = require('./api.js');
 
 
 let route = '';
