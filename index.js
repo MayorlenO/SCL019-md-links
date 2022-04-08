@@ -3,6 +3,7 @@ const path = require('path');
 const { exit } = require('process');
 const colors = require('colors/safe');
 const api = require('./api.js');
+const util = require('util')
 
 
 let route = '';
@@ -43,26 +44,39 @@ if(exist(route) && verifIsFile(route)){
      process.stdout.write(colors.green('Y se han encontrado estos archivos .md \n'));
     
      
-     const filesMd = [];
-      
+     const filesMd = [];      
      for (let i = 0; i < dirData.length; i++) {
-      
-      if (dirData[i].endsWith(".md")) {
-        
+        if (dirData[i].endsWith(".md")) {
         filesMd.push(dirData[i])
+
+
         
       }
      }
-     
-       
+
+            
     console.log(colors.bgRed(colors.white(filesMd)));
     process.stdout.write('\n');
     process.stdout.write('Ingrese la ruta del archivo que desea revisar \n')
  };
  
 if(verifIsFile(route) && verify(route)){
-   process.stdout.write(colors.green('La extensión del archivo es .md, ¿Desea revisar sus links? (Y/N)'));
-  } else if (verifIsFile(route) && !verify(route)){
+   process.stdout.write(colors.green('La extensión del archivo es .md \n'));
+
+   const readFileContent = util.promisify(fs.readFile)
+  readFileContent(ruta)
+
+.then(buff => {
+  const contents = buff.toString()
+  console.log(`\nContenido :\n${contents}`)
+})
+  
+.catch(err => {
+   console.log(`Error occurs, Error code -> ${err.code}, 
+   Error No -> ${err.errno}`);
+});
+
+     } else if (verifIsFile(route) && !verify(route)){
     process.stdout.write(colors.red('El archivo no es MD!'));
      exit();
   
