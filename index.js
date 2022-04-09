@@ -71,13 +71,60 @@ if(verifIsFile(route) && verify(route)){
   const contents = buff.toString()
   console.log(`\nContenido :\n${contents}`)
 })
+
   
 .catch(err => {
    console.log(`Error occurs, Error code -> ${err.code}, 
    Error No -> ${err.errno}`);
 });
 
-            
+     const links = markdownLinkExtractor(ruta)   
+     let arrayFetch = []; 
+     for(let i=0; i < links.length; i++){
+      const text = links[i].text;
+      const url= links[i]; 
+
+      let linkFetch = fetch(links[i])
+        .then(res=>{
+        if(ruta === '--validate'){
+            let infoLinks = {
+                link:res.url,
+                texto: text,
+                ruta: ruta,
+                status:res.status,
+                statusText: res.statusText  
+              };
+              console.log(infoLinks)
+              return infoLinks;
+          }else{
+              let infoLinks = {
+                  links:res.url,
+                  texto: text,
+                  ruta: ruta
+              }
+              console.log(infoLinks);
+              return infoLinks;
+              
+          }    
+          })
+          .catch(error =>{
+            let fail = {
+                urlLink: url,
+                satusLink:error,
+            }
+            return fail;   
+        })
+        arrayFetch.push(linkFetch);
+        console.log(arrayFetch)
+        
+        
+    }
+    
+    return Promise.all(arrayFetch);
+    
+    
+       
+     
       
      } else if (verifIsFile(route) && !verify(route)){
     process.stdout.write(colors.red('El archivo no es MD!'));
