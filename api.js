@@ -3,25 +3,26 @@ import fs from 'fs';
 import { exit } from 'process';
 import {verifyExistence, verifyExtension, isFile, isDirectory, readFile, dirOMd, validateOpt} from './index.js';
 import util from 'util'
+import chalk from 'chalk';
 
 
 // let mdLinks = (ruta, options = {validate:false}) =>{
 
 let route = '';
 
-process.stdout.write('Ingrese la ruta del archivo / directorio que desea revisar:\n');
+process.stdout.write(chalk.green('Ingrese la ruta del archivo / directorio que desea revisar:\n'));
 
 process.stdin.on('data', function(data){
 route = data.toString().trim();
-process.stdout.write(`Verificando ruta: ${route} \n`); 
+process.stdout.write(chalk.yellow(`Verificando ruta: ${route} \n`)); 
 
 const ruta = path.resolve(route)
 if(verifyExistence(route) && isFile(route)){
-  process.stdout.write('El archivo existe!\n')
-  process.stdout.write('Transformando la ruta a absoluta:\n')
+  process.stdout.write(chalk.bgWhiteBright(chalk.black('El archivo existe!\n')))
+  process.stdout.write(chalk.yellow('Transformando la ruta a absoluta:\n'))
   process.stdout.write(ruta + '\n')
 }else if(!verifyExistence(route)){
-  process.stdout.write('El archivo o directorio no existe. Verifique y Vuelva a iniciar la librería')
+  process.stdout.write(chalk.bgRedBright(chalk.black('El archivo o directorio no existe. Verifique y vuelva a iniciar la librería')))
   exit();
 };
 
@@ -93,7 +94,7 @@ if(isFile(ruta) && verifyExtension(ruta)){
       })
       
   } else if (isFile(ruta) && !verifyExtension(ruta)){
-    process.stdout.write('El archivo no es MD!');
+    process.stdout.write(chalk.bgRedBright(chalk.black('El archivo no es MD!')));
      exit();
      }
     
