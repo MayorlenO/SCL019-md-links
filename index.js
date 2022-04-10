@@ -57,7 +57,7 @@ export const validateOpt = (arrayLinks) => {
             text: obj.text,
             file: obj.file,
             status: res.status,
-            statusText: 'ok',
+            statusText: 'Ok',
           };
         } else {
           return {
