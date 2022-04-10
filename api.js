@@ -4,7 +4,7 @@ const { exit } = require('process');
 const colors = require('colors/safe');
 const index = require('./index.js');
 const util = require('util')
-const markdownLinkExtractor = require('markdown-link-extractor');
+
 
 // let mdLinks = (ruta, options = {validate:false}) =>{
 
@@ -13,6 +13,8 @@ const exist = index.verifyExistence;
 const verify = index.verifyExtension;
 const verifIsFile = index.isFile;
 const verifIsDirectory = index.isDirectory;
+const validOpt = index.validateOpt;
+const dirOMd = index.dirOMd
 
 
 
@@ -78,59 +80,32 @@ if(verifIsFile(ruta) && verify(ruta)){
    Error No -> ${err.errno}`);
 });
 
-     const links = markdownLinkExtractor(ruta)   
-     let arrayFetch = []; 
-     for(let i=0; i < links.length; i++){
-      const text = links[i].text;
-      const url= links[i]; 
-
-      let linkFetch = fetch(links[i])
-        .then(res=>{
-        if(ruta === '--validate'){
-            let infoLinks = {
-                link:res.url,
-                texto: text,
-                ruta: ruta,
-                status:res.status,
-                statusText: res.statusText  
-              };
-              console.log(infoLinks)
-              return infoLinks;
-          }else{
-              let infoLinks = {
-                  links:res.url,
-                  texto: text,
-                  ruta: ruta
-              }
-              console.log(infoLinks);
-              return infoLinks;
-              
-          }    
-          })
-          .catch(error =>{
-            let fail = {
-                urlLink: url,
-                satusLink:error,
-            }
-            return fail;   
-        })
-        arrayFetch.push(linkFetch);
-        console.log(arrayFetch)
-        
-        
-    }
+     const mdLinks = (files, options = {validate: false}) => {
+      return new Promise((resolve, reject) => {
+        let totalLinks = [];
+        dirOMd(files, totalLinks);
+        if (totalLinks.length > 0) {
+          if (!options.validate ) {
+              resolve(validOpt(totalLinks))
+              .then(r=>console.log(r))
+     }
     
-    return Promise.all(arrayFetch);
+    }else {
+          reject(new Error('No se ha encontrado ningún link'));
+      }
     
-    
-       
-     
+      }).catch((err) => { console.log('Este es el '+ err)});
+    };
+  
+      mdLinks(ruta,{ validate: false}).then((results)=> {
+          console.log(results);
+      })
       
-     } else if (verifIsFile(ruta) && !verify(ruta)){
+  } else if (verifIsFile(ruta) && !verify(ruta)){
     process.stdout.write(colors.red('El archivo no es MD!'));
      exit();
      }
-
+    
      });
     
     
