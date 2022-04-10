@@ -1,50 +1,41 @@
-const fs = require('fs');
-const path = require('path');
-const { exit } = require('process');
-const colors = require('colors/safe');
-const index = require('./index.js');
-const util = require('util')
+import path from 'path';
+import fs from 'fs';
+import { exit } from 'process';
+import {verifyExistence, verifyExtension, isFile, isDirectory, readFile, dirOMd, validateOpt} from './index.js';
+import util from 'util'
 
 
 // let mdLinks = (ruta, options = {validate:false}) =>{
 
 let route = '';
-const exist = index.verifyExistence;
-const verify = index.verifyExtension;
-const verifIsFile = index.isFile;
-const verifIsDirectory = index.isDirectory;
-const validOpt = index.validateOpt;
-const dirOMd = index.dirOMd
 
-
-
-process.stdout.write(colors.green('Ingrese la ruta del archivo / directorio que desea revisar:\n'));
+process.stdout.write('Ingrese la ruta del archivo / directorio que desea revisar:\n');
 
 process.stdin.on('data', function(data){
 route = data.toString().trim();
-process.stdout.write(colors.green(`Verificando ruta: ${route} \n`)); 
+process.stdout.write(`Verificando ruta: ${route} \n`); 
 
 const ruta = path.resolve(route)
-if(exist(route) && verifIsFile(route)){
-  process.stdout.write(colors.bgWhite(colors.black('El archivo existe!\n')));
-  process.stdout.write(colors.green('Transformando la ruta a absoluta:\n'))
-  process.stdout.write(colors.bgMagenta(colors.black(ruta + '\n')))
-}else if(!exist(route)){
-  process.stdout.write(colors.red('El archivo o directorio no existe. Verifique y Vuelva a iniciar la librería'))
+if(verifyExistence(route) && isFile(route)){
+  process.stdout.write('El archivo existe!\n')
+  process.stdout.write('Transformando la ruta a absoluta:\n')
+  process.stdout.write(ruta + '\n')
+}else if(!verifyExistence(route)){
+  process.stdout.write('El archivo o directorio no existe. Verifique y Vuelva a iniciar la librería')
   exit();
 };
 
- if(exist(route) && verifIsDirectory(route)){
-  process.stdout.write(colors.bgWhite(colors.black('El directorio existe \n')));
-  process.stdout.write(colors.green('Transformando la ruta a absoluta: \n'))
-  process.stdout.write(colors.bgMagenta(colors.black(ruta +'\n')))
-  process.stdout.write(colors.green('Los archivos del directorio son: \n'))
+ if(verifyExistence(route) && isDirectory(route)){
+  process.stdout.write('El directorio existe \n');
+  process.stdout.write('Transformando la ruta a absoluta: \n')
+  process.stdout.write(ruta +'\n')
+  process.stdout.write('Los archivos del directorio son: \n')
 
     
     let dirData = new Array();
     dirData = fs.readdirSync(ruta);
      console.log(dirData);
-     process.stdout.write(colors.green(' \n Y se han encontrado estos archivos .md \n'));
+     process.stdout.write(' \n Y se han encontrado estos archivos .md \n')
     
      
      const filesMd = [];      
@@ -58,13 +49,13 @@ if(exist(route) && verifIsFile(route)){
      }
 
             
-    console.log(colors.bgRed(colors.white(filesMd)));
+    console.log(filesMd);
     process.stdout.write('\n');
     process.stdout.write('Ingrese la ruta del archivo que desea revisar \n')
  };
  
-if(verifIsFile(ruta) && verify(ruta)){
-   process.stdout.write(colors.green('La extensión del archivo es .md \n'));
+if(isFile(ruta) && verifyExtension(ruta)){
+   process.stdout.write('La extensión del archivo es .md \n');
 
    const readFileContent = util.promisify(fs.readFile)
    readFileContent(ruta)
@@ -80,13 +71,13 @@ if(verifIsFile(ruta) && verify(ruta)){
    Error No -> ${err.errno}`);
 });
 
-     const mdLinks = (files, options = {validate: false}) => {
+     const linksMd = (files, options = {validate: false}) => {
       return new Promise((resolve, reject) => {
         let totalLinks = [];
         dirOMd(files, totalLinks);
         if (totalLinks.length > 0) {
           if (!options.validate ) {
-              resolve(validOpt(totalLinks))
+              resolve(validateOpt(totalLinks))
               .then(r=>console.log(r))
      }
     
@@ -97,12 +88,12 @@ if(verifIsFile(ruta) && verify(ruta)){
       }).catch((err) => { console.log('Este es el '+ err)});
     };
   
-      mdLinks(ruta,{ validate: false}).then((results)=> {
+      linksMd(ruta,{ validate: false}).then((results)=> {
           console.log(results);
       })
       
-  } else if (verifIsFile(ruta) && !verify(ruta)){
-    process.stdout.write(colors.red('El archivo no es MD!'));
+  } else if (isFile(ruta) && !verifyExtension(ruta)){
+    process.stdout.write('El archivo no es MD!');
      exit();
      }
     

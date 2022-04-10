@@ -1,18 +1,17 @@
-const fs = require('fs');
-const path = require('path');
+import path from 'path';
+import fs from 'fs';
+import fetch from 'node-fetch';
 
 
-const verifyExistence = (ruta)  => fs.existsSync(ruta); 
+export const verifyExistence = (ruta)  => fs.existsSync(ruta); 
 
-const verifyExtension = (ruta) => path.extname(ruta) === '.md';
+export const verifyExtension = (ruta) => path.extname(ruta) === '.md';
 
-const isFile = (ruta) => fs.statSync(ruta).isFile()
+export const isFile = (ruta) => fs.statSync(ruta).isFile()
 
-const isDirectory = (ruta) => fs.lstatSync(ruta).isDirectory()
+export const isDirectory = (ruta) => fs.lstatSync(ruta).isDirectory()
 
-const readFile = (ruta) => fs.readFileSync(ruta, "utf-8");
-
-const linksMd = (file, files) => {
+export const linksMd = (file, files) => {
     const line = file.split('\n');// separa en lineas el documento
     let arrayLinks = [];
     for ( let i=0; line.length > i; i++) {
@@ -32,7 +31,13 @@ const linksMd = (file, files) => {
       }
     }return arrayLinks;
   };
-  const dirOMd = (routeTotal, totalLinks) => {
+
+  export const readFile = (files, mdLinks) => {
+    const file = fs.readFileSync(files, 'utf8');//lee el archivo y lo devuelve
+    mdLinks.push(...linksMd(file, files)); // spread operator
+};
+
+  export const dirOMd = (routeTotal, totalLinks) => {
     if(isDirectory( routeTotal)) {
       readFolder(routeTotal, totalLinks);
     }else if(verifyExtension(routeTotal)) {
@@ -42,7 +47,7 @@ const linksMd = (file, files) => {
   
   
 
-const validateOpt = (arrayLinks) => {
+export const validateOpt = (arrayLinks) => {
     const statusLink = arrayLinks.map((obj) =>
       fetch(obj.href)
       .then((res) => {
@@ -79,14 +84,7 @@ const validateOpt = (arrayLinks) => {
 
 
 
-exports.verifyExtension = verifyExtension;
-exports.verifyExistence = verifyExistence;
-exports.isFile = isFile;
-exports.isDirectory = isDirectory;
-exports.readFile = readFile;
-exports.validateOpt = validateOpt;
-exports.linksMd = linksMd;
-exports.dirOMd = dirOMd;
+
 
   
 
