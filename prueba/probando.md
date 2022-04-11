@@ -1,2 +1,2 @@
-[Markdown](https://es.wikipedia.org/wiki/Markdown)
-[erroneo](https://es.widiasssss.org/wiki/Markdown)
+[Laboratoria](https://www.laboratoria.la)
+[laboratoria-broken](https://www.laboratoria.lo)

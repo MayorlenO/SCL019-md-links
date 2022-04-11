@@ -13,23 +13,25 @@ export const isDirectory = (ruta) => fs.lstatSync(ruta).isDirectory()
 
 export const linksMd = (file, files) => {
     const line = file.split('\n');// separa en lineas el documento
-    let arrayLinks = [];
+    let linksArray = [];
+    
     for ( let i=0; line.length > i; i++) {
-      const lineI = line[i];
-      const reguExpress = /\[([^\]]+)]\((https?:\/\/[^\s)]+)\)/g; // expresión regular que muestra el texto y los links
-      const matchLinks = lineI.matchAll(reguExpress);// busca coincidencias
-      const testMatch = reguExpress.test(lineI); // true o false
+      const lineIndex = line[i];
+      const regExp = /\[([^\]]+)]\((https?:\/\/[^\s)]+)\)/g; // expresión regular que muestra el texto y los links
+      const matchLinks = lineIndex.matchOk(regExp);// busca coincidencias
+      const testMatch = regExp.test(lineIndex); // true o false
       if(testMatch) {
         for(const match of matchLinks) {
-          var objMd = {
+          var objectLink = {
             href: match[2],
             text: match[1],
             file: files,
             line: i + 1,
           }
-        }arrayLinks.push(objMd);
+        }linksArray.push(objectLink);
       }
-    }return arrayLinks;
+      console.log('\n' + 'Se encontraron '+ linksArray.length +' links en el archivo .md')
+    }return linksArray;
   };
 
   export const readFile = (files, mdLinks) => {
@@ -37,18 +39,16 @@ export const linksMd = (file, files) => {
     mdLinks.push(...linksMd(file, files)); // spread operator
 };
 
-  export const dirOMd = (routeTotal, totalLinks) => {
-    if(isDirectory( routeTotal)) {
-      readFolder(routeTotal, totalLinks);
-    }else if(verifyExtension(routeTotal)) {
-      readFile(routeTotal, totalLinks);
+  export const md = (ruta, allLinks) => {
+    if(verifyExtension(ruta)) {
+      readFile(ruta, allLinks);
     }
   };
   
   
 
-export const validateOpt = (arrayLinks) => {
-    const statusLink = arrayLinks.map((obj) =>
+export const validateOpt = (linksArray) => {
+    const statusLink = linksArray.map((obj) =>
       fetch(obj.href)
       .then((res) => {
         if (res.status === 200) {
@@ -67,6 +67,7 @@ export const validateOpt = (arrayLinks) => {
             status: res.status,
             statusText: 'Fail',
           };
+          
         }
       })
       .catch((err) =>
@@ -81,7 +82,40 @@ export const validateOpt = (arrayLinks) => {
     return Promise.all(statusLink);
   };
   
+  export const statsArray = (validOpt) => {
+    let objStats = {}
+    objStats.Total = validateOpt.length;
+    objStats.Unique = 0;
+    const uniqueLinks = new Set(); // Objeto que permite almacenar valores únicos de cualquier tipo
+    validOpt.forEach(obj => {
+    uniqueLinks.add(obj.href);
+    });
+    objStats.Unique = uniqueLinks.size; // devuelve el número de elementos que hay en el objeto Set.
+    return objStats;
+};
 
+
+// función validar y status 
+export const validateStats = (arrayLinks) => {
+    return Promise.resolve(
+validateArray(arrayLinks)
+    .then(validatedArr=>{
+        let objeValStat = {};
+        objeValStat.Total = validatedArr.length;
+        objeValStat.Unique = 0;
+        objeValStat.Broken = 0;
+        const uniqueLinks = new Set();
+        validatedArr.forEach(obj => {
+            uniqueLinks.add(obj.href);
+            if (obj.status === 404) {
+                objeValStat.Broken += 1;
+            }
+        });
+        objeValStat.Unique = uniqueLinks.size;
+        return objeValStat;
+    })
+    .catch(err=>console.log('Error de validación' + err)))
+}
 
 
 
