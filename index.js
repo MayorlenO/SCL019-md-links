@@ -18,7 +18,7 @@ export const isFile = route => {
   return result
 }
 
-export const IsDirectory = route => {
+export const isDirectory = route => {
   let arrayFiles = []
   if (isFilePath(route)) {
     arrayFiles.push(route)

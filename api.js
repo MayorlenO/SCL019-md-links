@@ -1,11 +1,6 @@
-import {
-   md,
-  validateOpt,
-  statsArray,
-  validateStats,
-  } from "./index.js";
-import chalk from "chalk";
-import { exit } from "process";
+import fs from 'fs'
+import fetch from 'node-fetch'
+import { verifyExistence, isAbsolutePath, convertToAbsolute, isDirectory, verifyExtension } from './index.js'
 
    export  const mdLinks = (files, options = { validate: false }) => {
       return new Promise((resolve, reject) => {
