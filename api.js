@@ -2,6 +2,12 @@ import fs from 'fs'
 import fetch from 'node-fetch'
 import { verifyExistence, isAbsolutePath, convertToAbsolute, isDirectory, verifyExtension } from './index.js'
 
+const expReg = /\[((.+?))\]\((http|https|ftp|ftps).+?\)/g
+const urlExp = /\((http|https|ftp|ftps).+?\)/g
+const urlText = /\[((.+?))\]/g
+
+
+
    export  const mdLinks = (files, options = { validate: false }) => {
       return new Promise((resolve, reject) => {
         let totalLinks = [];
