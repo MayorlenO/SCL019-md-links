@@ -23,7 +23,25 @@ const verifyLinks = route => {
   }
 }
 
+const extractLinks = filesMd => {
+  const arrayLinksMd = []
+  filesMd.forEach(file => {
+    const readFileMd = fs.readFileSync(file, 'utf-8')
+    const linksMatch = readFileMd.match(RegExp)
 
+    for (let i in linksMatch) {
+      let textMatch = linksMatch[i].match(urlText)[0]
+      let urlMatch = linksMatch[i].match(urlExp)[0]
+      urlMatch = urlMatch.slice(1, urlMatch.length - 1)
+      arrayLinksMd.push({
+        href: urlMatch,
+        text: textMatch.slice(1, textMatch.length - 1),
+        file: filesMd.toString(),
+      })
+    }
+  })
+  return arrayLinksMd
+}
   //  export  const mdLinks = (files, options = { validate: false }) => {
   //     return new Promise((resolve, reject) => {
   //       let totalLinks = [];
