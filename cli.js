@@ -88,4 +88,4 @@ mdLinks(ruta, options)
     console.log(file);
     })
     .catch(err => console.log('error', err));
-});
+  });

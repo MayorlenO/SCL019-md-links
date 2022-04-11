@@ -30,9 +30,10 @@ export const linksMd = (file, files) => {
           }
         }linksArray.push(objectLink);
       }
-     console.log('\n' + 'Se encontraron '+ linksArray.length +' links en el archivo .md')
+     console.log('\n' + 'Se encontró '+ linksArray.length +' link(s) en el archivo .md')
     }return linksArray;
-  };
+    }
+  
 
   export const readFile = (files, mdLinks) => {
     const file = fs.readFileSync(files, 'utf8');//lee el archivo y lo devuelve
@@ -45,9 +46,7 @@ export const linksMd = (file, files) => {
     }
   };
   
-  
-
-export const validateOpt = (linksArray) => {
+  export const validateOpt = (linksArray) => {
     const statusLink = linksArray.map((obj) =>
       fetch(obj.href)
       .then((res) => {
@@ -85,7 +84,7 @@ export const validateOpt = (linksArray) => {
   export const statsArray = (validOpt) => {
     let objStats = {}
     objStats.Total = validateOpt.length;
-    objStats.Unique = 0;
+    objStats.Unique = 0; 
     const uniqueLinks = new Set(); // Objeto que permite almacenar valores únicos de cualquier tipo
     validOpt.forEach(obj => {
     uniqueLinks.add(obj.href);
