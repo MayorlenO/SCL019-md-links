@@ -16,10 +16,10 @@ export const linksMd = (file, files) => {
     let linksArray = [];
     
     for ( let i=0; line.length > i; i++) {
-      const lineIndex = line[i];
-      const regExp = /\[([^\]]+)]\((https?:\/\/[^\s)]+)\)/g; // expresión regular que muestra el texto y los links
-      const matchLinks = lineIndex.matchOk(regExp);// busca coincidencias
-      const testMatch = regExp.test(lineIndex); // true o false
+      const lineI = line[i];
+      const reguExpress = /\[([^\]]+)]\((https?:\/\/[^\s)]+)\)/g; // expresión regular que muestra el texto y los links
+      const matchLinks = lineI.matchAll(reguExpress);// busca coincidencias
+      const testMatch = reguExpress.test(lineI); // true o false
       if(testMatch) {
         for(const match of matchLinks) {
           var objectLink = {
@@ -30,7 +30,7 @@ export const linksMd = (file, files) => {
           }
         }linksArray.push(objectLink);
       }
-      console.log('\n' + 'Se encontraron '+ linksArray.length +' links en el archivo .md')
+     console.log('\n' + 'Se encontraron '+ linksArray.length +' links en el archivo .md')
     }return linksArray;
   };
 
@@ -39,9 +39,9 @@ export const linksMd = (file, files) => {
     mdLinks.push(...linksMd(file, files)); // spread operator
 };
 
-  export const md = (ruta, allLinks) => {
-    if(verifyExtension(ruta)) {
-      readFile(ruta, allLinks);
+  export const md = (routeTotal, totalLinks) => {
+    if(verifyExtension(routeTotal)) {
+      readFile(routeTotal, totalLinks);
     }
   };
   
