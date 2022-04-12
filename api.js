@@ -6,17 +6,17 @@ import chalk from "chalk";
 import { exit } from "process";
 
   const takeLinks = ruta => {
-    if(verifyExistence(ruta))&& isAbsolute(ruta)){
+    if(verifyExistence(ruta)){
+    if(isAbsolute(ruta)){
       const linksArray = isDirectory(ruta)
       let arrayMd = verifyExtension(linksArray)
       return arrayMd
-    
     } else {
       route = transfAbsolute(route)
       // const linksArray = isDirectory(ruta)
       // let arrayMd = verifyExtension(linksArray)
       // return arrayMd
-    
+    }
     } else {
       throw new Error('El archivo no existe')
     }
