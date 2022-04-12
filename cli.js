@@ -1,5 +1,5 @@
 import { mdLinks } from './api.js'
-import path from "path";
+import path, { resolve } from "path";
 import fs from "fs";
 import { exit } from "process";
 import {
@@ -12,6 +12,7 @@ import {
   import util from "util";
   import chalk from "chalk";
   
+   
   const messageStart = () => {
     const commands = [
       {
@@ -30,45 +31,47 @@ import {
         option: '--stats',
         structure: 'md-links <path-to-file> [options]',
         example: './some/example.md --stats',
-        outpout: '[{ total, unique }]',
+        output: '[{ total, unique }]',
       },
       {
         option: '--stats --validate',
         structure: 'md-links <path-to-file> [options]',
         example: './some/example.md --stats --validate',
-        outpout: '[{ total, unique, broken }]',
+        output: '[{ total, unique, broken }]',
       },
       {
         option: '--help',
         structure: '',
         example: 'md-links <path-to-file> [options]',
-        outpout: 'Volver a mostrar las opciones',
+        output: 'Volver a mostrar las opciones',
       },
     ]
-
+  
     console.table(
       commands.map(command => {
         return {
           Opciones: command.option,
           Ejemplo: command.example,
-          Outpout: command.outpout,
+          Output: command.outpnodeut,
         }
       })
     )
   }
+  // process.stdout.write(
+  //   chalk.green("Ingrese la ruta del archivo / directorio que desea revisar:\n")
+  // );
+  const route = process.argv[2]
+  let opt
 
-
-
-   let route = "";
-   let opt;
+  if (process.argv[3] && process.argv[4]) {
+    opt = `${process.argv[3]} ${process.argv[4]}`
+  } else {
+    opt = process.argv[3]
+  }
   
-  process.stdout.write(
-    chalk.green("Ingrese la ruta del archivo / directorio que desea revisar:\n")
-  );
-  
-  process.stdin.on("data", function (data) {
-    route = data.toString().trim();
-    process.stdout.write(chalk.yellow(`Verificando ruta: ${route} \n`));
+  // process.stdin.on("data", function (data) {
+  //   route = data.toString().trim();
+  //   process.stdout.write(chalk.yellow(`Verificando ruta: ${route} \n`));
   
     const ruta = path.resolve(route);
     if (verifyExistence(route) && isFile(route)) {
@@ -86,7 +89,7 @@ import {
               exit();
     }
   
-    if (verifyExistence(route) && isDirectory(route)) {
+    if (verifyExistence(ruta) && isDirectory(ruta)) {
       process.stdout.write(chalk.bgWhite(chalk.black("El directorio existe! \n")));
       process.stdout.write("Transformando la ruta a absoluta: \n");
       process.stdout.write(ruta + "\n");
@@ -120,82 +123,99 @@ import {
           chalk.bgRedBright(chalk.black("El archivo no es MD!. Ingrese una ruta válida: \n"))
         );
     }
-  })
-  
-  if (opt === undefined) {
-    mdLinks(args, {
-      validate: false,
-    })
-      .then(result => {
-        if (result.length > 0) {
-          return result.forEach(element =>
-            console.log(
-              `File => ${chalk.blue(element.file)}, Url => ${chalk.yellow(element.href)}, Text => ${chalk.cyan(
-                element.text
-              )}`
+
+    if (opt === undefined) {
+      mdLinks(ruta, {
+        validate: false,
+      })
+        .then(result => {
+          if (result.length > 0) {
+            return result.forEach(obj =>
+              console.log(
+                `File => ${chalk.blue(obj.file)}, Url => ${chalk.yellow(obj.href)}, Text => ${chalk.cyan(
+                  obj.text
+                )}`
+              )
             )
-          )
-        }
-        messageNoMd(args)
-      })
-      .catch(error => messageNoExist(error,args))
-  } else if (opt === '--validate') {
-    mdLinks(args, {
-      validate: true,
-    })
-      .then(result => {
-        if (result.length > 0) {
-          return result.forEach(function (element) {
-            if (element.status >= 400 || element.status == 'Error') {
-              console.log(
-                `File => ${chalk.blue(element.file)}, Status => ${chalk.red(
-                  element.textStatus,
-                  element.status
-                )}, Url => ${chalk.red(element.href)},Text => ${chalk.cyan(element.text)}`
-              )
-            } else {
-              console.log(
-                `File => ${chalk.blue(element.file)}, Status => ${chalk.green(
-                  element.textStatus,
-                  element.status
-                )}, Url => ${chalk.yellow(element.href)}, Text => ${chalk.cyan(element.text)}`
-              )
-            }
-          })
-        }
-        messageNoMd(args)
-      })
-      .catch(error => messageNoExist(error,args))
-  } else if (opt === '--stats') {
-    mdLinks(args, {
-      validate: true,
-    })
-      .then(result => {
-        if (result.length > 0) {
-          return console.log(`Total => ${result.length} \nUnique => ${uniqueLinks(result)}`)
-        }
-        messageNoMd(args)
-      })
-      .catch(error => messageNoExist(error,args))
-  } else if (opt === '--stats --validate') {
-    mdLinks(args, {
-      validate: true,
-    })
-      .then(result => {
-        if (result.length > 0) {
+          }
           
-          return console.log(
-            `Total => ${result.length} \nUnique => ${uniqueLinks(result)} \nBroken => ${brokenLinks(result).length} \nSon los siguientes:`, brokenLinks(result)
-          )
-        }
-  
-        messageNoMd(args)
+        })
+        .catch(error =>(error,ruta))
+    } else if (opt === '--validate') {
+      mdLinks(ruta, {
+        validate: true,
       })
-      .catch(error => messageNoExist(error, args))
-  } else if (opt === '--help') {
-    messageStart()
-  } else {
-    console.log(chalk.bold.bgRed(`La opción ${opt} es inválida`))
-    messageStart()
-  }
+        .then(result => {
+          if (result.length > 0) {
+            return result.forEach(function (obj) {
+              if (obj.status >= 400 || obj.status == 'Error') {
+                console.log(
+                  `File => ${chalk.blue(obj.file)}, Status => ${chalk.red(
+                    obj.textStatus,
+                    obj.status
+                  )}, Url => ${chalk.red(obj.href)},Text => ${chalk.cyan(obj.text)}`
+                )
+              } else {
+                console.log(
+                  `File => ${chalk.blue(obj.file)}, Status => ${chalk.green(
+                    obj.textStatus,
+                    obj.status
+                  )}, Url => ${chalk.yellow(obj.href)}, Text => ${chalk.cyan(obj.text)}`
+                )
+              }
+            })
+          }
+          
+        })
+        .catch(error => (error,ruta))
+    } else if (opt === '--stats') {
+        mdLinks(ruta, {
+        validate: false,
+      })
+        .then(result => {
+          
+          if (result.length > 0) {
+            return console.log(`Total => ${result.length} \nUnique => ${uniqueLinks(result)}`)
+          }
+          
+        })
+        .catch(error => (error,ruta))
+    } else if (opt === '--stats --validate') {
+      mdLinks(route, {
+        validate: true,
+      })
+        .then(result => {
+          if (result.length > 0) {
+            
+            return console.log(
+              `Total => ${result.length} \nUnique => ${uniqueLinks(result)} \nBroken => ${brokenLinks(result).length} \nSon los siguientes:`, brokenLinks(result)
+            )
+          }
+    
+          
+        })
+        .catch(error => (error, ruta))
+    } else if (opt === '--help') {
+      messageStart()
+    } else {
+      console.log(chalk.bold.bgRed(`La opción ${opt} es inválida`))
+      messageStart()
+    }
+    
+
+// let options = {
+//     validate: false,
+// };
+
+// if (
+//     (ruta === '--validate' ) 
+// ) {
+//     options.validate = true;
+// } 
+
+// mdLinks(ruta, options)
+//     .then(file => {
+//     console.log(file);
+//     })
+//     .catch(err => console.log('error', err));
   
