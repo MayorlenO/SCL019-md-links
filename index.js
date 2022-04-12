@@ -23,7 +23,14 @@ export const isDirectory = (ruta) =>{
   let arrayOfFiles = []
   if(isFile(route)){
     arrayOfFiles.push(route)
+  }else{
+    const isDirectory = fs.readdirSync(route)
+    readDirectory.forEach(file => {
+      const fileRoute = path.join(route, file)
+      arrayOfFiles.push(fileRoute)
+    })
   }
+  return arrayOfFiles
 } 
 
 export const linksMd = (file, files) => {
