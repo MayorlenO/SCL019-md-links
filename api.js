@@ -26,6 +26,36 @@ import { exit } from "process";
     const regExpToUrl = /\((http|https|ftp|ftps).+?\)/g
     const text = /\[((.+?))\]/g
   
+    export const mdLinksValids = arrayofLinks => {
+       const linkssValid = arrayofLinks.map(element => {
+         return fetch(element.href)
+         .then(res => {
+           let objectOfLinks = {
+             text: element.text,
+             file: element.file,
+             href: element.href,
+             status: element.status
+           }
+           if (res.status >=200 && res.status <=399) objectOfLinks.textStatus = 'Válido'
+           else objectOfLinks.textStatus = res.statusText
+           return objectOfLinks
+         })
+         .catch(() => {
+           let objectLink = {
+            text: element.text,
+            file: element.file,
+            href: element.href,
+            status: 'Error',
+            textStatus: 'No es válido'
+           }
+           return objectLink
+           }
+         })
+       })
+    
+
+
+
    export  const mdLinks = (files, options = { validate: false }) => {
       return new Promise((resolve, reject) => {
         let totalLinks = [];
