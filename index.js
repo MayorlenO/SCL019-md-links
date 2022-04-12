@@ -9,15 +9,16 @@ export const verifyExistence = (route)  => fs.existsSync(route);
 
 export const isAbsolute = (route) => path.isAbsolute(route)
 
-export const trasnfAbsolute = route => path.join(__dirname, route)
+export const transfAbsolute = route => path.join(__dirname, route)
 
-
+//Verificar si es un archivo
 export const isFile = (ruta) => {
   const stat = fs.statSync(ruta)
   const result = stat.isFile()
   return result
 }
 
+//Función para extraer archivos si es un directorio
 export const isDirectory = (ruta) =>{
   let arrayOfFiles = []
   if(isFile(route)){
@@ -32,6 +33,7 @@ export const isDirectory = (ruta) =>{
   return arrayOfFiles
 } 
 
+// Función para verificar extensión
 export const verifyExtension = arrayOfFiles =>{
   return arrayOfFiles.filter(file => {
     return path.extname(file) === '.md'

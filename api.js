@@ -1,10 +1,31 @@
-import {
-   md,
-  validateOpt,
-  statsArray,
+import fs from 'fs'
+import fetch from 'node-fetch'
+import {verifyExistence, verifyExtension, isAbsolute, transfAbsolute, isDirectory   
     } from "./index.js";
 import chalk from "chalk";
 import { exit } from "process";
+
+  const takeLinks = ruta => {
+    if(verifyExistence(ruta))&& isAbsolute(ruta)){
+      const linksArray = isDirectory(ruta)
+      let arrayMd = verifyExtension(linksArray)
+      return arrayMd
+    
+    } else {
+      route = transfAbsolute(route)
+      // const linksArray = isDirectory(ruta)
+      // let arrayMd = verifyExtension(linksArray)
+      // return arrayMd
+    
+    } else {
+      throw new Error('El archivo no existe')
+    }
+      }
+
+    
+  
+
+
 
    export  const mdLinks = (files, options = { validate: false }) => {
       return new Promise((resolve, reject) => {
