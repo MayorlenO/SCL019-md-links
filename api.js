@@ -22,11 +22,10 @@ import { exit } from "process";
     }
       }
 
-    
+    const regExp = /\[((.+?))\]\((http|https|ftp|ftps).+?\)/g
+    const regExpToUrl = /\((http|https|ftp|ftps).+?\)/g
+    const text = /\[((.+?))\]/g
   
-
-
-
    export  const mdLinks = (files, options = { validate: false }) => {
       return new Promise((resolve, reject) => {
         let totalLinks = [];
