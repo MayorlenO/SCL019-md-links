@@ -1,14 +1,13 @@
 import fs from 'fs'
 import fetch from 'node-fetch'
-import { isAbsolute } from 'path'
 import { verifyExistence, verifyAbsolute, convertToAbsolute, fileOrDirectory, verifyExtension } from './index.js'
 
-const expToLinks = /\[((.+?))\]\((http|https|ftp|ftps).+?\)/g
-const expToUrl = /\((http|https|ftp|ftps).+?\)/g
-const textToUrl = /\[((.+?))\]/g
+const expFIle = /\[((.+?))\]\((http|https|ftp|ftps).+?\)/g
+const expHref = /\((http|https|ftp|ftps).+?\)/g
+const expText = /\[((.+?))\]/g
 
 
-const getLinks = route => {
+const arrayMd = route => {
   if (verifyExistence(route)) {
     if (verifyAbsolute(route)) {
       const arrayRoute = fileOrDirectory(route)
@@ -30,12 +29,12 @@ const extractLinks = filesMd => {
   const arrayLinksMd = []
   filesMd.forEach(file => {
     const readFileMd = fs.readFileSync(file, 'utf-8')
-    const linksMatch = readFileMd.match(expToLinks)
+    const linksMatch = readFileMd.match(expFIle)
 
     //for in para buscar  texto y url eliminando sus parentesis
     for (let i in linksMatch) {
-      let textMatch = linksMatch[i].match(textToUrl)[0]
-      let urlMatch = linksMatch[i].match(expToUrl)[0]
+      let textMatch = linksMatch[i].match(expText)[0]
+      let urlMatch = linksMatch[i].match(expHref)[0]
       urlMatch = urlMatch.slice(1, urlMatch.length - 1)
       arrayLinksMd.push({
         href: urlMatch,
@@ -82,7 +81,7 @@ export const mdLinks = (pathFile, option) =>
   new Promise((resolve, reject) => {
     let result
     try {
-      result = getLinks(pathFile)
+      result = arrayMd(pathFile)
     } catch (error) {
       return reject(error)
     }
