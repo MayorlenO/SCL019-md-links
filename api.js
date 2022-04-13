@@ -1,82 +1,120 @@
 import fs from 'fs'
 import fetch from 'node-fetch'
-import {verifyExistence, verifyExtension, isAbsolute, transfAbsolute, isDirectory   
-    } from "./index.js";
-import chalk from "chalk";
-import { exit } from "process";
+import { isAbsolute } from 'path'
+import { verifyExistence, verifyAbsolute, convertToAbsolute, fileOrDirectory, verifyExtension } from './index.js'
 
-  const takeLinks = ruta => {
-    if(verifyExistence(ruta)){
-    if(isAbsolute(ruta)){
-      const linksArray = isDirectory(ruta)
-      let arrayMd = verifyExtension(linksArray)
-      return arrayMd
+const expToLinks = /\[((.+?))\]\((http|https|ftp|ftps).+?\)/g
+const expToUrl = /\((http|https|ftp|ftps).+?\)/g
+const textToUrl = /\[((.+?))\]/g
+
+
+const getLinks = route => {
+  if (verifyExistence(route)) {
+    if (verifyAbsolute(route)) {
+      const arrayRoute = fileOrDirectory(route)
+      let result = verifyExtension(arrayRoute)
+      return result
     } else {
-      route = transfAbsolute(route)
-      // const linksArray = isDirectory(ruta)
-      // let arrayMd = verifyExtension(linksArray)
-      // return arrayMd
+      route = convertToAbsolute(route)
+      const arrayRoute = fileOrDirectory(route)
+      let result = verifyExtension(arrayRoute)
+      return result
     }
-    } else {
-      throw new Error('El archivo no existe')
+  } else {
+    throw new Error('No existe!')
+  }
+}
+
+//buscar regex e cada archivo
+const extractLinks = filesMd => {
+  const arrayLinksMd = []
+  filesMd.forEach(file => {
+    const readFileMd = fs.readFileSync(file, 'utf-8')
+    const linksMatch = readFileMd.match(expToLinks)
+
+    //for in para buscar  texto y url eliminando sus parentesis
+    for (let i in linksMatch) {
+      let textMatch = linksMatch[i].match(textToUrl)[0]
+      let urlMatch = linksMatch[i].match(expToUrl)[0]
+      urlMatch = urlMatch.slice(1, urlMatch.length - 1)
+      arrayLinksMd.push({
+        href: urlMatch,
+        text: textMatch.slice(1, textMatch.length - 1),
+        file: filesMd
+      })
     }
-      }
+  })
+  return arrayLinksMd
+}
 
-    const regExp = /\[((.+?))\]\((http|https|ftp|ftps).+?\)/g
-    const regExpToUrl = /\((http|https|ftp|ftps).+?\)/g
-    const text = /\[((.+?))\]/g
-  
-    export const mdLinksValids = arrayofLinks => {
-       const linkssValid = arrayofLinks.map(element => {
-         return fetch(element.href)
-         .then(res => {
-           let objectOfLinks = {
-             text: element.text,
-             file: element.file,
-             href: element.href,
-             status: element.status
-           }
-           if (res.status >=200 && res.status <=399) objectOfLinks.textStatus = 'Válido'
-           else objectOfLinks.textStatus = res.statusText
-           return objectOfLinks
-         })
-         .catch(() => {
-           let objectLink = {
-            text: element.text,
-            file: element.file,
-            href: element.href,
-            status: 'Error',
-            textStatus: 'No es válido'
-           }
-           return objectLink
-           }
-         })
-       })
-    
-
-
-
-   export  const mdLinks = (files, options = { validate: false }) => {
-      return new Promise((resolve, reject) => {
-        let totalLinks = [];
-        md(files, totalLinks);
-        if (totalLinks.length > 0) {
-          if (!options.validate) {
-            resolve(validateOpt(totalLinks)).then((r) => console.log(r));
-          }  else if (options.validate === false && options.stats === true) {
-            resolve(statsArray(totalMdLinks));
-        } else if (options.validate === true && options.stats === true) {
-          console.log('verificando' + options)
-            validateStats(totalMdLinks)
-            .then(r=>console.log(r))
-        } else {
-          reject(new Error("No se ha encontrado ningún link. Pruebe con otro archivo:"));
+//validar links y mostrar status
+export const linksValidate = arrayLinks => {
+  const linksValidate = arrayLinks.map(element => {
+    return fetch(element.href)
+      .then(res => {
+        let objectOfLinks = {
+          href: element.href,
+          file: element.file,
+          text: element.text,
+          status: res.status,
         }
-       }
-      }).catch((err) => { err});
-      
-    };
-    
+        if (res.status >= 200 && res.status <= 399) objectOfLinks.textStatus = 'OK'
+        else objectOfLinks.textStatus = res.statusText
+        return objectOfLinks
+      })
+      .catch(() => {
+        let objectOfLinks = {
+          href: element.href,
+          file: element.file,
+          text: element.text,
+          status: 'Error',
+          textStatus: 'Fail',
+        }
+        return objectOfLinks
+      })
+  })
+
+  return Promise.all(linksValidate)
+}
+
+
+export const mdLinks = (pathFile, option) =>
+  new Promise((resolve, reject) => {
+    let result
+    try {
+      result = getLinks(pathFile)
+    } catch (error) {
+      return reject(error)
+    }
+
+    if (result.length > 0) {
+      const links = extractLinks(result)
+
+      if (option.validate === false) {
+        resolve(links)
+      } else {
+        linksValidate(links).then(resultValidate => {
+          resolve(resultValidate)
+        })
+      }
+    } else {
+      resolve(result)
+    }
+  })
+
+  //--stats  crear colección
+export const uniqueLinks = arrayObject => {
+  let newArray = arrayObject.map(element => element.href)
+  const uniqueArray = [...new Set(newArray)]
+  return uniqueArray.length
+}
+
+
+export const brokenLinks = arrayObject => {
+  let brokenArray = arrayObject.filter(element => element.status >= 400 || element.status == 'Error')
+  brokenArray = brokenArray.map( element => element.href)
+  return brokenArray
+}
          
 
  
