@@ -3,7 +3,6 @@ import fs from 'fs'
 
 const __dirname = path.resolve('')
 
-
 export const verifyExistence = route => fs.existsSync(route)
 
 export const verifyAbsolute = route => path.resolve(route)
@@ -17,22 +16,25 @@ export const isFile = route => {
 }
 
 export const fileOrDirectory = route => {
-  let arrayFiles = []
+  let arrayAllFiles = []
   if (isFile(route)) {
-    arrayFiles.push(route)
+    arrayAllFiles.push(route)
   } else {
     const readDirectory = fs.readdirSync(route)
     readDirectory.forEach(file => {
       const pathFile = path.join(route, file)
-      arrayFiles.push(pathFile)
+      arrayAllFiles.push(pathFile)
     })
+    // console.log(arrayAllFiles)
   }
-  return arrayFiles
+  return arrayAllFiles
 }
 
-export const verifyExtension = arrayFiles => {
-  return arrayFiles.filter(file => {
-    return path.extname(file) === '.md'
+export const verifyExtension = arrayAllFiles => {
+  return arrayAllFiles.filter(file => {
+    // console.log(arrayAllFiles)
+     return path.extname(file) === '.md'
+    
   })
 }
 
