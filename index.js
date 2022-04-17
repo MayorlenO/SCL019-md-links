@@ -14,7 +14,7 @@ export const isFile = route => {
   const result = lstat.isFile()
   return result
 }
-
+//Creo array de archivos con archivos y archivos del directorio
 export const fileOrDirectory = route => {
   let arrayAllFiles = []
   if (isFile(route)) {
@@ -22,14 +22,15 @@ export const fileOrDirectory = route => {
   } else {
     const readDirectory = fs.readdirSync(route)
     readDirectory.forEach(file => {
-      const pathFile = path.join(route, file)
-      arrayAllFiles.push(pathFile)
+      const foundFiles = path.join(route, file)
+      arrayAllFiles.push(foundFiles)
     })
     // console.log(arrayAllFiles)
   }
   return arrayAllFiles
 }
 
+//Verifico la extensión de los archivos del array creado anteriormente
 export const verifyExtension = arrayAllFiles => {
   return arrayAllFiles.filter(file => {
     // console.log(arrayAllFiles)

@@ -14,7 +14,7 @@ const startLibrary = () => {
     {
       option: '--validate',
       example: './some/example.md --validate',
-      output: '[{ Archivo, Estado, Cód. estado, URL, Texto }]',
+      output: '[{ Archivo, Estado, Cód, URL, Texto }]',
     },
     {
       option: '--stats',
@@ -39,7 +39,7 @@ const startLibrary = () => {
       return {
         'Opciones disponibles': command.option,
         'Ejemplo de búsqueda': command.example,
-        'Salida': command.output
+        // 'Salida': command.output
 
         
       }

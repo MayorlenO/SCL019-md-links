@@ -24,7 +24,7 @@ const arrayMd = route => {
   }
 }
 
-//buscar regex en cada archivo
+//buscar coincidencias en cada archivo
 const extractLinks = filesMd => {
   const arrayLinksMd = []
   filesMd.forEach(file => {
