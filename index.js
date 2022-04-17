@@ -10,8 +10,8 @@ export const verifyAbsolute = route => path.resolve(route)
 export const convertToAbsolute = route => path.join(__dirname, route)
 
 export const isFile = route => {
-  const stat = fs.lstatSync(route)
-  const result = stat.isFile()
+  const lstat = fs.lstatSync(route)
+  const result = lstat.isFile()
   return result
 }
 

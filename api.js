@@ -20,25 +20,25 @@ const arrayMd = route => {
       return result
     }
   } else {
-    throw new Error('No existe!')
+    throw new Error('No existe(n)!')
   }
 }
 
-//buscar regex e cada archivo
+//buscar regex en cada archivo
 const extractLinks = filesMd => {
   const arrayLinksMd = []
   filesMd.forEach(file => {
     const readFileMd = fs.readFileSync(file, 'utf-8')
-    const linksMatch = readFileMd.match(expFIle)
+    const matchLinks = readFileMd.match(expFIle)
 
     //for in para buscar  texto y url eliminando sus parentesis
-    for (let i in linksMatch) {
-      let textMatch = linksMatch[i].match(expText)[0]
-      let urlMatch = linksMatch[i].match(expHref)[0]
-      urlMatch = urlMatch.slice(1, urlMatch.length - 1)
+    for (let indice in matchLinks) {
+      let matchText = matchLinks[indice].match(expText)[0]
+      let matchHref = matchLinks[indice].match(expHref)[0]
+      matchHref = matchHref.slice(1, matchHref.length - 1)
       arrayLinksMd.push({
-        href: urlMatch,
-        text: textMatch.slice(1, textMatch.length - 1),
+        href: matchHref,
+        text: matchText.slice(1, matchText.length - 1),
         file: filesMd
       })
     }
@@ -50,15 +50,15 @@ const extractLinks = filesMd => {
 export const linksValidate = arrayLinks => {
   const linksValidate = arrayLinks.map(element => {
     return fetch(element.href)
-      .then(res => {
+      .then(data => {
         let objectOfLinks = {
           href: element.href,
           file: element.file,
           text: element.text,
-          status: res.status,
+          status: data.status,
         }
-        if (res.status >= 200 && res.status <= 399) objectOfLinks.textStatus = 'OK'
-        else objectOfLinks.textStatus = res.statusText
+        if (data.status >= 200 && data.status <= 399) objectOfLinks.textStatus = ' OK'
+        else objectOfLinks.textStatus = data.statusText
         return objectOfLinks
       })
       .catch(() => {
@@ -67,7 +67,7 @@ export const linksValidate = arrayLinks => {
           file: element.file,
           text: element.text,
           status: 'Error',
-          textStatus: 'Fail',
+          textStatus: '400',
         }
         return objectOfLinks
       })

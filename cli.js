@@ -8,33 +8,28 @@ const startLibrary = () => {
   const commands = [
     {
       option: '',
-      structure: 'md-links <path-to-file>',
       example: './some/example.md',
-      output: '[{ file, href, text }]',
+      output: '[{ Archivo, URL, Texto }]',
     },
     {
       option: '--validate',
-      structure: 'md-links <path-to-file> [options]',
       example: './some/example.md --validate',
-      output: '[{ file, href, message, status, text }]',
+      output: '[{ Archivo, Estado, Cód. estado, URL, Texto }]',
     },
     {
       option: '--stats',
-      structure: 'md-links <path-to-file> [options]',
       example: './some/example.md --stats',
-      output: '[{ total, unique }]',
+      output: '[{ Total, Unique }]',
     },
     {
       option: '--stats --validate',
-      structure: 'md-links <path-to-file> [options]',
       example: './some/example.md --stats --validate',
-      output: '[{ total, unique, broken }]',
+      output: '[{ Total, Unique, Broken }]',
     },
     {
       option: '--help',
-      structure: 'md-links <path-to-file> [options]',
       example: './some/example.md --stats --validate',
-      output: '[{ total, unique, broken }]',
+      output: '[{ Total, Unique, Broken }]',
     },
     
   ]
@@ -43,7 +38,8 @@ const startLibrary = () => {
     commands.map(command => {
       return {
         'Opciones disponibles': command.option,
-        'Ejemplo de búsqueda': command.example
+        'Ejemplo de búsqueda': command.example,
+        'Salida': command.output
 
         
       }
@@ -55,7 +51,7 @@ const args = process.argv[2]
 let userOption
 
 const errorVerifyExistence = (error,route) => {
-  process.stdout.write(chalk.red(`${error} el archivo o directorio:`))
+  process.stdout.write(chalk.red(`${error} el/los archivo(s) o directorio:`))
   process.stdout.write(chalk.green(` ${route}`))
   process.exit()
 }
@@ -98,10 +94,10 @@ if (userOption === undefined) {
         return result.forEach(function (element) {
           if (element.status >= 400 || element.status == 'Error') {
             process.stdout.write(
-              `\nArchivo:${chalk.blue(element.file)}\nStatus: ${chalk.red(element.textStatus, element.status)}\nUrl: ${chalk.yellow(element.href)}\nText: ${chalk.cyan(element.text)}`)
+              `\nArchivo:${chalk.blue(element.file)}\nEstado: ${chalk.red(element.status)} \nCód. Estado: ${chalk.red(element.textStatus)}\nUrl: ${chalk.yellow(element.href)}\nTexto: ${chalk.cyan(element.text)}\n`)
           } else {
             console.log(
-              `\nArchivo: ${chalk.blue(element.file)}\nStatus:${chalk.green(element.textStatus,element.status)}\nUrl: ${chalk.yellow(element.href)}\nText:${chalk.cyan(element.text)}`)
+              `\nArchivo: ${chalk.blue(element.file)}\nEstado:${chalk.green(element.textStatus)}\nCód. Estado: ${chalk.green(element.status)}\nUrl: ${chalk.yellow(element.href)}\nTexto:${chalk.cyan(element.text)}\n`)
           }
         })
       }
@@ -114,7 +110,7 @@ if (userOption === undefined) {
   })
     .then(result => {
       if (result.length > 0) {
-        return process.stdout.write(chalk.blue(`Total: ${result.length} \nUnique: ${uniqueLinks(result)}`))
+        return process.stdout.write(chalk.blue(`Total: ${result.length} \nUnique: ${uniqueLinks(result)}\n`))
       }
       errorVerifyExtension(args)
     })
@@ -127,9 +123,7 @@ if (userOption === undefined) {
       if (result.length > 0) {
         
         return console.log(chalk.blue(
-          `Links encontrados: ${result.length} \nUnique: ${uniqueLinks(result)} \nBroken: ${chalk.red(brokenLinks(result).length)} \nLos links rotos son:`, brokenLinks(result)
-        ))
-      }
+          `Links encontrados: ${result.length} \nUnique: ${uniqueLinks(result)} \nBroken: ${chalk.red(brokenLinks(result).length)} \nLos links rotos son:`, brokenLinks(result)))}
 
       errorVerifyExtension(args)
     })
