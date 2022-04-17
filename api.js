@@ -7,13 +7,14 @@ const expHref = /\((http|https|ftp|ftps).+?\)/g
 const expText = /\[((.+?))\]/g
 
 
+
 const arrayMd = route => {
   if (verifyExistence(route)) {
     if (verifyAbsolute(route)) {
-      const arrayRoute = fileOrDirectory(route)
-      let result = verifyExtension(arrayRoute)
+      const arrayRoute = fileOrDirectory(route) //invoco función que contiene arrayAllFiles
+      let result = verifyExtension(arrayRoute)  //almaceno los archivos md que existen y cuya ruta sea absoluta
       return result
-    } else {
+    } else {  //si no es absoluta la ruta, la transformo a absoluta
       route = convertToAbsolute(route)
       const arrayRoute = fileOrDirectory(route)
       let result = verifyExtension(arrayRoute)
@@ -24,7 +25,7 @@ const arrayMd = route => {
   }
 }
 
-//buscar coincidencias en cada archivo
+//buscar coincidencias en los links, con expresiones regulares, en cada archivo
 const extractLinks = filesMd => {
   const arrayLinksMd = []
   filesMd.forEach(file => {
@@ -46,11 +47,11 @@ const extractLinks = filesMd => {
   return arrayLinksMd
 }
 
-//validar links y mostrar status
+//capturo data del href y la traigo en un objeto
 export const linksValidate = arrayLinks => {
   const linksValidate = arrayLinks.map(element => {
     return fetch(element.href)
-      .then(data => {
+      .then(data => {  //muestra la respuesta que equivale al status
         let objectOfLinks = {
           href: element.href,
           file: element.file,
@@ -67,7 +68,7 @@ export const linksValidate = arrayLinks => {
           file: element.file,
           text: element.text,
           status: 'Error',
-          textStatus: '400',
+          textStatus: '>= 400',
         }
         return objectOfLinks
       })
@@ -76,12 +77,12 @@ export const linksValidate = arrayLinks => {
   return Promise.all(linksValidate)
 }
 
-
-export const mdLinks = (pathFile, option) =>
+//Core
+export const mdLinks = (route, option) =>
   new Promise((resolve, reject) => {
     let result
     try {
-      result = arrayMd(pathFile)
+      result = arrayMd(route)
     } catch (error) {
       return reject(error)
     }
