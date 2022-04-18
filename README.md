@@ -22,6 +22,12 @@
 
 ## 3. Vistas ingreso de ruta
 
+# Error archivo inexistente:
+<img src='./imgReadme/vista1a.png'>
+
+# Error extensión distinta a md:
+<img src='./imgReadme/vistanomd.png'>
+
 ## 4. Vistas opciones de usuario
 
 ## 5. Uso e instalación
