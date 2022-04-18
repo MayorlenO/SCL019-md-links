@@ -22,13 +22,30 @@
 
 ## 3. Vistas ingreso de ruta
 
-# Error archivo inexistente:
+### Error archivo inexistente:
 <img src='./imgReadme/vista1a.png'>
 
-# Error extensión distinta a md:
+### Error extensión distinta a md:
 <img src='./imgReadme/vistanomd.png'>
 
 ## 4. Vistas opciones de usuario
+
+### Opción 'undefined':
+<img src='./imgReadme/vista2a.png'>
+
+### Opción '--stats':
+<img src='./imgReadme/vista2b.png'>
+
+### Opción '--stats  --validate':
+<img src='./imgReadme/vista2c.png'>
+
+### Opción '--validate':
+<img src='./imgReadme/vista2d.png'>
+
+### error de usuario:
+<img src='./imgReadme/vista2e.png'>
+
+
 
 ## 5. Uso e instalación
  
