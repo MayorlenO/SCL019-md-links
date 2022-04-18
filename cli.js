@@ -56,9 +56,9 @@ const errorVerifyExistence = (error,route) => {
   process.exit()
 }
 const errorVerifyExtension = route => {
-  process.stdout.write(chalk.red(`La ruta `))
+  process.stdout.write(chalk.red(`Error: La ruta `))
   process.stdout.write(chalk.green(`${route} `))
-  process.stdout.write(chalk.red(`no es o no contiene archivos .md`))
+  process.stdout.write(chalk.red(`no es un archivo.md, no contiene archivos .md o no contiene links`))
   process.exit()
 }
 

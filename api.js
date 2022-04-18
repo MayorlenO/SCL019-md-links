@@ -77,8 +77,8 @@ export const linksValidate = arrayLinks => {
   return Promise.all(linksValidate)
 }
 
-//Core
-export const mdLinks = (route, option) =>
+
+export const mdLinks = (route, userOption) =>
   new Promise((resolve, reject) => {
     let result
     try {
@@ -88,18 +88,18 @@ export const mdLinks = (route, option) =>
     }
 
     if (result.length > 0) {
-      const links = extractLinks(result)
+      const links = extractLinks(result) //invoca resultado de búsqueda de coincidencias
 
-      if (option.validate === false) {
-        resolve(links)
+      //validate
+      if (userOption.validate === false) {
+        resolve(links)                 //Busca coincidencias nuevamente  
       } else {
         linksValidate(links).then(resultValidate => {
-          resolve(resultValidate)
+          resolve(resultValidate)    //se retorna objeto con las 5 propiedades
+         
         })
       }
-    } else {
-      resolve(result)
-    }
+    } 
   })
 
   //--stats  crear colección
