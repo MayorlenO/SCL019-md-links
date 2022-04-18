@@ -34,16 +34,16 @@
 <img src='./imgReadme/vista2a.png'>
 
 ### Opción '--stats':
-<img src='./imgReadme/vista2b.png'>
+<img src='./imgReadme/Vista2b.png'>
 
 ### Opción '--stats  --validate':
-<img src='./imgReadme/vista2c.png'>
+<img src='./imgReadme/Vista2c.png'>
 
 ### Opción '--validate':
-<img src='./imgReadme/vista2d.png'>
+<img src='./imgReadme/Vista2d.png'>
 
 ### error de usuario:
-<img src='./imgReadme/vista2e.png'>
+<img src='./imgReadme/Vista2e.png'>
 
 
 
