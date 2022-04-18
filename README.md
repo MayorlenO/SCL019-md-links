@@ -18,7 +18,7 @@
 --validate , --stats o ambas.
 
 ## 2. Diagrama de flujo
-<img src='.imgReadme\diagrama.jpg'>
+<img src='./imgReadme/diagrama.jpg'>
 
 ## 3. Vistas ingreso de ruta
 
