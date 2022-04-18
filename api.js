@@ -99,7 +99,9 @@ export const mdLinks = (route, userOption) =>
          
         })
       }
-    } 
+    } else {
+      resolve(result)
+    }
   })
 
   //--stats  crear colección

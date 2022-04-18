@@ -51,14 +51,18 @@ const args = process.argv[2]
 let userOption
 
 const errorVerifyExistence = (error,route) => {
+  process.stdout.write('\n====================================================================================== \n')
   process.stdout.write(chalk.red(`${error} el/los archivo(s) o directorio:`))
   process.stdout.write(chalk.green(` ${route}`))
+  process.stdout.write('\n======================================================================================\n\n')
   process.exit()
 }
 const errorVerifyExtension = route => {
+  process.stdout.write('\n=========================================================================================================================\n')
   process.stdout.write(chalk.red(`Error: La ruta `))
   process.stdout.write(chalk.green(`${route} `))
   process.stdout.write(chalk.red(`no es un archivo.md, no contiene archivos .md o no contiene links`))
+  process.stdout.write('\n=========================================================================================================================\n\n')
   process.exit()
 }
 
